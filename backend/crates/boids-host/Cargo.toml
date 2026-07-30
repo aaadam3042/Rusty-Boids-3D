@@ -1,0 +1,8 @@
+[package]
+name = "boids-desktop"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+
+[dependencies]
+boids-core = {path = "../boids-core"}
