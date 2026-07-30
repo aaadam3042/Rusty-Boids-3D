@@ -7,7 +7,7 @@ name = "boids-core"
 version = "0.1.0"
 
 [[package]]
-name = "boids-desktop"
+name = "boids-host"
 version = "0.1.0"
 dependencies = [
  "boids-core",

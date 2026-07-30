@@ -1,5 +1,5 @@
 [package]
-name = "boids-desktop"
+name = "boids-host"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
