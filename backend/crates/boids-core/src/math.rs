@@ -1,20 +1,20 @@
-use std::ops::{Add, Sub, Mul, Div, AddAssign, SubAssign, MulAssign, DivAssign, Neg};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 #[derive(Debug, Default, Copy, Clone, PartialEq)]
 pub struct Vec3 {
     pub x: f32,
     pub y: f32,
-    pub z: f32
+    pub z: f32,
 }
 
 impl Add for Vec3 {
     type Output = Self;
-    
+
     fn add(self, other: Self) -> Self {
         Self {
             x: self.x + other.x,
             y: self.y + other.y,
-            z: self.z + other.z
+            z: self.z + other.z,
         }
     }
 }
@@ -29,12 +29,12 @@ impl AddAssign for Vec3 {
 
 impl Sub for Vec3 {
     type Output = Self;
-    
+
     fn sub(self, other: Self) -> Self {
         Self {
             x: self.x - other.x,
             y: self.y - other.y,
-            z: self.z - other.z
+            z: self.z - other.z,
         }
     }
 }
@@ -49,12 +49,12 @@ impl SubAssign for Vec3 {
 
 impl Mul<f32> for Vec3 {
     type Output = Self;
-    
+
     fn mul(self, scalar: f32) -> Self {
         Self {
             x: self.x * scalar,
             y: self.y * scalar,
-            z: self.z * scalar
+            z: self.z * scalar,
         }
     }
 }
@@ -69,13 +69,13 @@ impl MulAssign<f32> for Vec3 {
 
 impl Div<f32> for Vec3 {
     type Output = Self;
-    
+
     fn div(self, scalar: f32) -> Self {
         Self {
             x: self.x / scalar,
             y: self.y / scalar,
-            z: self.z / scalar
-        }  
+            z: self.z / scalar,
+        }
     }
 }
 
@@ -89,12 +89,12 @@ impl DivAssign<f32> for Vec3 {
 
 impl Neg for Vec3 {
     type Output = Self;
-    
+
     fn neg(self) -> Self {
         Self {
             x: -self.x,
             y: -self.y,
-            z: -self.z
+            z: -self.z,
         }
     }
 }
@@ -140,7 +140,7 @@ impl Vec3 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_zero_vector() {
         let v = Vec3::ZERO;
@@ -320,7 +320,7 @@ mod tests {
         let v1 = Vec3::new(1.0, 2.0, 3.0);
         let v2 = Vec3::new(4.0, -5.0, 6.0);
         let result = v1.dot(v2);
-        assert_eq!(result, 12.0);   
+        assert_eq!(result, 12.0);
     }
 
     #[test]
@@ -334,7 +334,7 @@ mod tests {
     fn test_length() {
         let v = Vec3::new(1.0, 2.0, 2.0);
         let result = v.length();
-        assert_eq!(result, 3.0);    
+        assert_eq!(result, 3.0);
     }
 
     #[test]
