@@ -1,16 +1,21 @@
 use crate::boid::Boid;
-use crate::bounds::Bounds;
+use crate::bounds::{BoundaryMode, Bounds};
 use crate::params::SimulationParams;
 
 struct World {
     boids: Vec<Boid>,
     params: SimulationParams,
     bounds: Bounds,
+    bounds_mode: BoundaryMode,
     elapsed: f32,
 }
 
 impl World {
     pub fn new() -> Self {
+
+    }
+
+    pub fn from_config(config: Config) {
 
     }
 
@@ -28,10 +33,6 @@ impl World {
 
     pub fn params(&self) -> &SimulationParams {
         &self.params
-    }
-
-    pub fn params_mut(&mut self) -> &mut SimulationParams {
-        &mut self.params
     }
 
     pub fn bounds(&self) -> Bounds {
