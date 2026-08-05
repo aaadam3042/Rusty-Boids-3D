@@ -320,6 +320,36 @@ mod tests {
     }
 
     #[test]
+    fn test_is_finite() {
+        let v1 = Vec3::new(10.0, 10.0, 10.0);
+        let v2 = Vec3::new(10.0, -10.0, 10.0);
+        let v3 = Vec3::new(0.0, 0.0, 0.0);
+        assert!(v1.is_finite());
+        assert!(v2.is_finite());
+        assert!(v3.is_finite());
+    }
+
+    #[test]
+    fn test_is_infinite() {
+        let v1 = Vec3::new(f32::NAN, 1.0, 1.0);
+        let v2 = Vec3::new(1.0, f32::NAN, 1.0);
+        let v3 = Vec3::new(1.0, 1.0, f32::NAN);
+        let v4 = Vec3::new(f32::NAN, f32::NAN, f32::NAN);
+        let v5 = Vec3::new(f32::INFINITY, 1.0, 1.0);
+        let v6 = Vec3::new(1.0, f32::INFINITY, 1.0);
+        let v7 = Vec3::new(1.0, 1.0, f32::INFINITY);
+        let v8 = Vec3::new(f32::INFINITY, f32::INFINITY, f32::INFINITY);
+        assert!(!v1.is_finite());
+        assert!(!v2.is_finite());
+        assert!(!v3.is_finite());
+        assert!(!v4.is_finite());
+        assert!(!v5.is_finite());
+        assert!(!v6.is_finite());
+        assert!(!v7.is_finite());
+        assert!(!v8.is_finite());
+    }
+
+    #[test]
     fn test_dot_product() {
         let v1 = Vec3::new(1.0, 2.0, 3.0);
         let v2 = Vec3::new(4.0, -5.0, 6.0);
