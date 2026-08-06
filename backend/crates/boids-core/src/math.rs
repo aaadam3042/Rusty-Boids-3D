@@ -122,6 +122,18 @@ impl Vec3 {
         self.length_squared().sqrt()
     }
 
+    pub fn limit_length(self, max_length: f32) -> Self {
+        debug_assert!(max_length.is_finite() && max_length >= 0.0);
+
+        let length_sq = self.length_squared();
+        let max_length_sq = max_length * max_length;
+        if length_sq > max_length_sq {
+            self * (max_length / length_sq.sqrt())
+        } else {
+            self
+        }
+    }
+
     pub fn normalise_or_zero(self) -> Self {
         let length = self.length();
         if length > 0.0 && length.is_finite() {
@@ -144,6 +156,12 @@ impl Vec3 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn assert_vec3_approx_eq(actual: Vec3, expected: Vec3) {
+        assert!((actual.x - expected.x).abs() <= f32::EPSILON);
+        assert!((actual.y - expected.y).abs() <= f32::EPSILON);
+        assert!((actual.z - expected.z).abs() <= f32::EPSILON);
+    }
 
     #[test]
     fn test_zero_vector() {
@@ -406,5 +424,56 @@ mod tests {
         let v2 = Vec3::new(4.0, 6.0, 3.0);
         let result = v1.distance_squared(v2);
         assert_eq!(result, 25.0);
+    }
+
+    #[test]
+    fn test_limit_length_exceeds_limit() {
+        let v = Vec3::new(3.0, 4.0, 0.0);
+        let result = v.limit_length(3.0);
+        assert_eq!(result.length(), 3.0);
+        assert_vec3_approx_eq(v.normalise_or_zero(), result.normalise_or_zero());
+    }
+
+    #[test]
+    fn test_limit_length_within_limit() {
+        let v = Vec3::new(1.0, 1.0, 1.0);
+        let result = v.limit_length(5.0);
+        assert_eq!(result, v);
+    }
+
+    #[test]
+    fn test_limit_length_at_limit() {
+        let v = Vec3::new(0.0, 3.0, 0.0);
+        let result = v.limit_length(3.0);
+        assert_eq!(result, v);
+    }
+
+    #[test]
+    fn test_limit_length_zero_vector() {
+        let v = Vec3::ZERO;
+        let result = v.limit_length(5.0);
+        assert_eq!(result, Vec3::ZERO);
+    }
+
+    #[test]
+    fn test_limit_length_negative_components() {
+        let v = Vec3::new(-3.0, -4.0, 0.0);
+        let result = v.limit_length(3.0);
+        assert_eq!(result.length(), 3.0);
+        assert_vec3_approx_eq(v.normalise_or_zero(), result.normalise_or_zero());
+    }
+
+    #[test]
+    fn test_limit_length_small_max_length() {
+        let v = Vec3::new(1.0, 1.0, 1.0);
+        let result = v.limit_length(0.5);
+        assert!(result.length() <= 0.5);
+    }
+
+    #[test]
+    fn test_limit_length_zero_max_length() {
+        let v = Vec3::new(1.0, 1.0, 1.0);
+        let result = v.limit_length(0.0);
+        assert_eq!(result.length(), 0.0);
     }
 }
