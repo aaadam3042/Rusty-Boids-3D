@@ -41,6 +41,17 @@ impl Bounds {
     }
 }
 
+// Getters
+impl Bounds {
+    pub const fn min(&self) -> Vec3 {
+        self.min
+    }
+
+    pub const fn max(&self) -> Vec3 {
+        self.max
+    }
+}
+
 // Mutating Bounds functions
 impl Bounds {
      pub fn apply_wrap(&self, position: &mut Vec3) {
