@@ -1,5 +1,3 @@
-use std::fmt::Alignment;
-
 use crate::boid::Boid;
 use crate::math::Vec3;
 use crate::params::SimulationParams;
