@@ -96,12 +96,12 @@ fn separation_for(index: usize, boids: &[Boid], separation_radius: f32) -> Vec3 
     separation_vec
 }
 
-#[cfg(test)] 
-mod tests {
-    use super::*;
+// #[cfg(test)] 
+// mod tests {
+//     use super::*;
 
-    #[test]
-    fn test_() {
-        // TODO: Implement later
-    }
-}
+//     #[test]
+//     fn test_() {
+//         // TODO: Implement later
+//     }
+// }
