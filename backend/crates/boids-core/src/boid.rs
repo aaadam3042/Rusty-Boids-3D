@@ -10,7 +10,7 @@ pub struct Boid {
 }
 
 impl Boid {
-    pub const fn new(id: BoidId, position: Vec3, velocity: Vec3) -> Self {
+    pub(crate) const fn new(id: BoidId, position: Vec3, velocity: Vec3) -> Self {
         Self {
             id,
             position,
