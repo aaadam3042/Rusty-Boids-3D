@@ -30,15 +30,15 @@ impl Bounds {
         Ok(Self { min, max })
     }
 
-    pub fn size(&self) -> Vec3 {
+    pub(crate) fn size(&self) -> Vec3 {
         self.max - self.min
     }
 
-    pub fn contains(&self, point: Vec3) -> bool {
-        point.x >= self.min.x && point.x <= self.max.x &&
-        point.y >= self.min.y && point.y <= self.max.y &&
-        point.z >= self.min.z && point.z <= self.max.z
-    }
+    // pub(crate) fn contains(&self, point: Vec3) -> bool {
+    //     point.x >= self.min.x && point.x <= self.max.x &&
+    //     point.y >= self.min.y && point.y <= self.max.y &&
+    //     point.z >= self.min.z && point.z <= self.max.z
+    // }
 }
 
 // Getters
@@ -54,7 +54,7 @@ impl Bounds {
 
 // Mutating Bounds functions
 impl Bounds {
-     pub fn apply_wrap(&self, position: &mut Vec3) {
+    pub(crate) fn apply_wrap(&self, position: &mut Vec3) {
         if position.x < self.min.x {
             position.x = self.max.x - (self.min.x - position.x) % self.size().x;
         } else if position.x > self.max.x {
@@ -74,7 +74,7 @@ impl Bounds {
         }
     }
 
-    pub fn apply_bounce(&self, position: &mut Vec3, velocity: &mut Vec3) {
+    pub(crate) fn apply_bounce(&self, position: &mut Vec3, velocity: &mut Vec3) {
         if position.x <= self.min.x {
             position.x = self.min.x;
             if velocity.x < 0.0 { velocity.x = -velocity.x; }
@@ -482,29 +482,29 @@ mod tests {
 
     }
 
-    #[test]
-    fn test_contains_inside() {
-        let bounds = default_test_bounds();
-        assert!(bounds.contains(Vec3::new(250.0, 250.0, 250.0)));
-    }
+    // #[test]
+    // fn test_contains_inside() {
+    //     let bounds = default_test_bounds();
+    //     assert!(bounds.contains(Vec3::new(250.0, 250.0, 250.0)));
+    // }
 
-    #[test]
-    fn test_contains_on_boundaries() {
-        let bounds = default_test_bounds();
-        assert!(bounds.contains(Vec3::new(0.0, 0.0, 0.0)));
-        assert!(bounds.contains(Vec3::new(500.0, 500.0, 500.0)));
-        assert!(bounds.contains(Vec3::new(0.0, 500.0, 0.0)));
-        assert!(bounds.contains(Vec3::new(500.0, 0.0, 500.0)));
-    }
+    // #[test]
+    // fn test_contains_on_boundaries() {
+    //     let bounds = default_test_bounds();
+    //     assert!(bounds.contains(Vec3::new(0.0, 0.0, 0.0)));
+    //     assert!(bounds.contains(Vec3::new(500.0, 500.0, 500.0)));
+    //     assert!(bounds.contains(Vec3::new(0.0, 500.0, 0.0)));
+    //     assert!(bounds.contains(Vec3::new(500.0, 0.0, 500.0)));
+    // }
 
-    #[test]
-    fn test_contains_outside() {
-        let bounds = default_test_bounds();
-        assert!(!bounds.contains(Vec3::new(-1.0, 250.0, 250.0)));
-        assert!(!bounds.contains(Vec3::new(250.0, -1.0, 250.0)));
-        assert!(!bounds.contains(Vec3::new(250.0, 250.0, -1.0)));
-        assert!(!bounds.contains(Vec3::new(501.0, 250.0, 250.0)));
-        assert!(!bounds.contains(Vec3::new(250.0, 501.0, 250.0)));
-        assert!(!bounds.contains(Vec3::new(250.0, 250.0, 510.0)));
-    }
+    // #[test]
+    // fn test_contains_outside() {
+    //     let bounds = default_test_bounds();
+    //     assert!(!bounds.contains(Vec3::new(-1.0, 250.0, 250.0)));
+    //     assert!(!bounds.contains(Vec3::new(250.0, -1.0, 250.0)));
+    //     assert!(!bounds.contains(Vec3::new(250.0, 250.0, -1.0)));
+    //     assert!(!bounds.contains(Vec3::new(501.0, 250.0, 250.0)));
+    //     assert!(!bounds.contains(Vec3::new(250.0, 501.0, 250.0)));
+    //     assert!(!bounds.contains(Vec3::new(250.0, 250.0, 510.0)));
+    // }
 }

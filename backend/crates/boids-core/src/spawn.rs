@@ -126,8 +126,16 @@ mod tests {
         ).expect("Expected bounds to construct successfully.");
         let boids = spawn_boids(&config, &bounds);
 
+        let min = bounds.min();
+        let max = bounds.max();
+        let assert_within_bounds = |position: &Vec3| {
+            assert!(position.x >= min.x && position.x <= max.x);
+            assert!(position.y >= min.y && position.y <= max.y);
+            assert!(position.z >= min.z && position.z <= max.z);
+        };
+
         for boid in boids {
-            assert!(bounds.contains(boid.position));
+            assert_within_bounds(&boid.position);
         }
     }
 
