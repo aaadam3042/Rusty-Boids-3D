@@ -5,9 +5,9 @@ use crate::spawn::{SpawnConfig, spawn_boids};
 use crate::steering::acceleration_for;
 
 pub struct WorldSettings {
-    params: SimulationParams,
-    bounds: Bounds,
-    boundary_mode: BoundaryMode,
+    pub params: SimulationParams,
+    pub bounds: Bounds,
+    pub boundary_mode: BoundaryMode,
 }
 
 pub struct World {

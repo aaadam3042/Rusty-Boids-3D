@@ -26,7 +26,7 @@ impl SpawnConfig {
     }
 }
 
-pub fn spawn_boids(config: &SpawnConfig, bounds: &Bounds) -> Vec<Boid> {
+pub(crate) fn spawn_boids(config: &SpawnConfig, bounds: &Bounds) -> Vec<Boid> {
     let mut rng = ChaCha8Rng::seed_from_u64(config.seed);
 
     let min = bounds.min();

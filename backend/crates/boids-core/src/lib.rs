@@ -1,8 +1,8 @@
+pub mod bounds;
 pub mod math;
+pub mod spawn;
 pub mod world;
 pub mod params;
-pub mod bounds;
 
 mod boid;
-mod spawn;
 mod steering;
