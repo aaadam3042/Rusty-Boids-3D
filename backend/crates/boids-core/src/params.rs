@@ -22,15 +22,15 @@ pub struct SimulationParams {
 impl Default for SimulationParams {
     fn default() -> Self {
         Self {
-            perception_radius: 1.0,
-            separation_radius: 0.5,
+            perception_radius: 7.0,
+            separation_radius: 2.0,
 
-            cohesion_weight: 1.0,
-            alignment_weight: 1.0,
-            separation_weight: 1.5,
+            cohesion_weight: 18.0,
+            alignment_weight: 3.0,
+            separation_weight: 180.0,
 
-            max_speed: 1.0,
-            max_acceleration: 0.5,
+            max_speed: 200.0,
+            max_acceleration: 100.0,
         }
     }
 }
