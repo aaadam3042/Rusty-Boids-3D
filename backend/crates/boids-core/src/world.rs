@@ -29,21 +29,17 @@ impl World {
     }
 
     pub fn step(&mut self, dt: f32) {
-        let mut accelerations = Vec::with_capacity(self.boids.len());
-
-        // Step 1: Calculate the acceleration forces on each boid
-        for index in 0..self.boids.len() {
-            accelerations.push(acceleration_for(index, &self.boids, &self.settings.params));
-        }
-
+        
         let max_speed = self.settings.params.max_speed();
-
-        // Step 2: update each boid
-        for (boid, acceleration) in self.boids.iter_mut().zip(accelerations) {
+        for index in 0..self.boids.len() {
+            // Adding steering to boids in place is important to maintain movement
+            let acceleration = acceleration_for(index, &self.boids, &self.settings.params);
+            
+            let boid = &mut self.boids[index];
             boid.velocity += acceleration * dt;
             boid.velocity = boid.velocity.limit_length(max_speed);
            
-           boid.position += boid.velocity * dt;
+            boid.position += boid.velocity * dt;
 
             match &self.settings.boundary_mode {
                 BoundaryMode::Wrap => {
