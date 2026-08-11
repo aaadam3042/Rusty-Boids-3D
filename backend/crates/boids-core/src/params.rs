@@ -22,7 +22,7 @@ pub struct SimulationParams {
 impl Default for SimulationParams {
     fn default() -> Self {
         Self {
-            perception_radius: 7.0,
+            perception_radius: 15.0,
             separation_radius: 2.0,
 
             cohesion_weight: 18.0,
