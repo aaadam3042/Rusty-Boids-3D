@@ -56,10 +56,10 @@ fn main() -> io::Result<()> {
     let world_settings = WorldSettings {
         params: simulation_params,
         bounds,
-        boundary_mode: BoundaryMode::Wrap,
+        boundary_mode: BoundaryMode::Bounce,
     };
 
-    let spawn_config = SpawnConfig::new(100, 123, 5.0);
+    let spawn_config = SpawnConfig::new(200, 123, 100.0);
     let mut world = World::from_config(spawn_config, world_settings);
 
     let stdout = io::stdout();
