@@ -9,6 +9,10 @@ pub enum BoundsError {
 pub enum BoundaryMode {
     Bounce,
     Wrap, 
+    SoftTurn {
+        margin: f32,
+        turn_acceleration: f32,
+    },
 }
 
 #[derive(Debug, PartialEq)]
@@ -33,12 +37,6 @@ impl Bounds {
     pub(crate) fn size(&self) -> Vec3 {
         self.max - self.min
     }
-
-    // pub(crate) fn contains(&self, point: Vec3) -> bool {
-    //     point.x >= self.min.x && point.x <= self.max.x &&
-    //     point.y >= self.min.y && point.y <= self.max.y &&
-    //     point.z >= self.min.z && point.z <= self.max.z
-    // }
 }
 
 // Getters
@@ -97,6 +95,26 @@ impl Bounds {
         } else if position.z >= self.max.z {
             position.z = self.max.z;
             if velocity.z > 0.0 { velocity.z = -velocity.z };
+        }
+    }
+
+    pub(crate) fn apply_soft_turn(&self, position: Vec3, velocity: &mut Vec3, margin: f32, turn_acceleration: f32, dt:f32) {
+        let velocity_change = turn_acceleration * dt;
+
+        if position.x < self.min.x + margin {
+            velocity.x += velocity_change;
+        }
+
+        if position.x > self.max.x - margin {
+            velocity.x -= velocity_change;
+        }
+
+        if position.y < self.min.y + margin {
+            velocity.y += velocity_change;
+        }
+
+        if position.y > self.max.y - margin {
+            velocity.y -= velocity_change;
         }
     }
 }

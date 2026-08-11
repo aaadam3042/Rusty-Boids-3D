@@ -56,7 +56,7 @@ fn main() -> io::Result<()> {
     let world_settings = WorldSettings {
         params: simulation_params,
         bounds,
-        boundary_mode: BoundaryMode::Bounce,
+        boundary_mode: BoundaryMode::SoftTurn { margin: 10.0, turn_acceleration: 500.0 },
     };
 
     let spawn_config = SpawnConfig::new(200, 123, 100.0);

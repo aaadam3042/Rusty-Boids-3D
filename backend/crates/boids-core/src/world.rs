@@ -38,6 +38,20 @@ impl World {
             let boid = &mut self.boids[index];
             boid.velocity += acceleration * dt;
             boid.velocity = boid.velocity.limit_length(max_speed);
+
+            // Soft turn is applied before updating steering
+            if let BoundaryMode::SoftTurn { 
+                margin,
+                turn_acceleration 
+            } = &self.settings.boundary_mode {
+                self.settings.bounds.apply_soft_turn(
+                    boid.position, 
+                    &mut boid.velocity, 
+                    *margin, 
+                    *turn_acceleration, 
+                    dt,
+                );
+            }
            
             boid.position += boid.velocity * dt;
 
@@ -48,6 +62,7 @@ impl World {
                 BoundaryMode::Bounce => {
                     self.settings.bounds.apply_bounce(&mut boid.position, &mut boid.velocity);
                 }
+                BoundaryMode::SoftTurn { .. } => {}
             }
 
             // TODO: Remove once we implment z axis
