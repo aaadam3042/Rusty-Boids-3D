@@ -38,16 +38,19 @@ pub(crate) fn spawn_boids(config: &SpawnConfig, bounds: &Bounds) -> Vec<Boid> {
         let position = Vec3::new(
             rng.random_range(min.x..max.x),
             rng.random_range(min.y..max.y),
-            min.z, // TODO: Unlock z when implementing full 3D features
+            rng.random_range(min.z..max.z),
         );
 
-        let angle = rng.random_range(0.0..TAU);
-        let (sin, cos) = angle.sin_cos();
+        let azimuth = rng.random_range(0.0..TAU);
+        let z_direction = rng.random_range(-1.0_f32..1.0_f32);
+
+        let xy_scale = (1.0 - z_direction * z_direction).sqrt();
+        let (sin, cos) = azimuth.sin_cos();
 
         let velocity = Vec3::new(
-            cos * config.initial_speed,
-            sin * config.initial_speed,
-            0.0, // TODO: Unlock z when implementing full 3D features
+            cos * xy_scale * config.initial_speed,
+            sin * xy_scale * config.initial_speed,
+            z_direction * config.initial_speed,
         );
 
         boids.push(Boid::new(index as BoidId, position, velocity));

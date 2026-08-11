@@ -23,9 +23,7 @@ fn alignment_for(index: usize, boids: &[Boid], perception_radius: f32) -> Vec3 {
         }
 
         if current_boid.position.distance_squared(other_boid.position) < perception_radius_sq {
-            average_vec.x += other_boid.velocity.x;
-            average_vec.y += other_boid.velocity.y;
-            // average_vec += other_boid.velocity; TODO: Fix when 3d
+            average_vec += other_boid.velocity;
             num_neighbours += 1;
         }
     }
@@ -36,10 +34,7 @@ fn alignment_for(index: usize, boids: &[Boid], perception_radius: f32) -> Vec3 {
 
     average_vec /= num_neighbours as f32;
 
-    average_vec.x -= current_boid.velocity.x;
-    average_vec.y -= current_boid.velocity.y;
-    average_vec
-    // average_vec - current_boid.velocity TODO: Fix when 3D
+    average_vec - current_boid.velocity 
 }
 
 fn cohesion_for(index: usize, boids: &[Boid], perception_radius: f32) -> Vec3 {
@@ -55,9 +50,7 @@ fn cohesion_for(index: usize, boids: &[Boid], perception_radius: f32) -> Vec3 {
         }
 
         if current_boid.position.distance_squared(other_boid.position) < perception_radius_sq {
-            center.x += other_boid.position.x;
-            center.y += other_boid.position.y;
-            // center += other_boid.position TODO: Unlock when implementing 3D - This does the above + z axis
+            center += other_boid.position;
             num_neighbours += 1;
         }
     }
@@ -70,10 +63,7 @@ fn cohesion_for(index: usize, boids: &[Boid], perception_radius: f32) -> Vec3 {
     
     // Return the displacement vector, ie direction and distance
     // This means that the further we are the stronger the pull
-    center.x -= current_boid.position.x;
-    center.y -= current_boid.position.y;
-    center
-    // center - current_boid.position TODO: Unlock when implementing 3D
+    center - current_boid.position
 }
 
 fn separation_for(index: usize, boids: &[Boid], separation_radius: f32) -> Vec3 {
@@ -89,19 +79,8 @@ fn separation_for(index: usize, boids: &[Boid], separation_radius: f32) -> Vec3 
 
         if current_boid.position.distance_squared(other_boid.position) < separation_radius_sq {
             separation_vec += current_boid.position - other_boid.position; 
-            separation_vec.z = 0.0; // TODO: Remove when 3D
         }
     }
 
     separation_vec
 }
-
-// #[cfg(test)] 
-// mod tests {
-//     use super::*;
-
-//     #[test]
-//     fn test_() {
-//         // TODO: Implement later
-//     }
-// }

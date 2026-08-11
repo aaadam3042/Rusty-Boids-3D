@@ -64,10 +64,6 @@ impl World {
                 }
                 BoundaryMode::SoftTurn { .. } => {}
             }
-
-            // TODO: Remove once we implment z axis
-            boid.position.z = 0.0;
-            boid.velocity.z = 0.0;
         }
     }
 
