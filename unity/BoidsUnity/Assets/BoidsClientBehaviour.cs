@@ -13,6 +13,7 @@ public class BoidsClientBehaviour : MonoBehaviour
     private readonly ConcurrentQueue<string> snapshots = new();
     private readonly ConcurrentQueue<string> diagnostics = new();
     private readonly Dictionary<int, GameObject> boidsById = new();
+    private long lastRenderedTick = -1;
 
     private Process hostProcess;
     private GameObject boidsEmpty;
@@ -121,20 +122,32 @@ public class BoidsClientBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        string newestJson = null;
         while (snapshots.TryDequeue(out string json))
+        {
+            newestJson = json;   
+        }
+        if (newestJson != null)
         {
             try
             {
-                WorldSnapshot snapshot = JsonUtility.FromJson<WorldSnapshot>(json);
-
+                WorldSnapshot snapshot = JsonUtility.FromJson<WorldSnapshot>(newestJson);
                 if (snapshot == null || snapshot.boids == null)
                 {
-                    Debug.LogWarning($"Invalid boids snapshot: {json}");
-                    continue;
-                }
+                    Debug.LogWarning($"Invalid boids snapshot: {newestJson}");
+                } 
+                else
+                {
+                    if (lastRenderedTick >= 0 && snapshot.tick > lastRenderedTick + 1)
+                    {
+                        Debug.Log($"Skipped {snapshot.tick - lastRenderedTick - 1} snapshots");
+                    }
 
-                ApplySnapshot(snapshot);
-            } catch (Exception e)
+                    lastRenderedTick = snapshot.tick;
+                    ApplySnapshot(snapshot);   
+                }
+            } 
+            catch (Exception e)
             {
                 Debug.LogWarning($"Unable to deserialise boids snapshot: {e.Message}");
             }
