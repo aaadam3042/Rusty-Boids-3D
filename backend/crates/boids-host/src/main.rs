@@ -1,6 +1,6 @@
 use std::io::{self, BufWriter, Write};
 use std::thread;
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use boids_core::bounds::{BoundaryMode, Bounds};
 use boids_core::math::Vec3;
@@ -60,21 +60,25 @@ fn main() -> io::Result<()> {
         // boundary_mode: BoundaryMode::SoftTurn { margin: 10.0, turn_acceleration: 500.0 },
     };
 
-    let spawn_config = SpawnConfig::new(500, 123, 100.0);
+    let spawn_config = SpawnConfig::new(1000, 123, 100.0);
     let mut world = World::from_config(spawn_config, world_settings);
 
     let stdout = io::stdout();
     let mut writer = BufWriter::new(stdout.lock());
     let step_duration = Duration::from_secs_f32(FIXED_DT);
     let mut tick = 0;
+    let mut next_tick = Instant::now() + step_duration;
 
     write_snapshot(&mut writer, &world, tick)?;
 
     loop {
-        thread::sleep(step_duration);
-
+        // Perform this tick
         world.step(FIXED_DT);
         tick += 1;
+        
+        // Wait to ensure the ticks time is completed
+        thread::sleep(next_tick.saturating_duration_since(Instant::now()));
+        next_tick += step_duration;
 
         if let Err(error) = write_snapshot(&mut writer, &world, tick) {
             if error.kind() == io::ErrorKind::BrokenPipe {
