@@ -5,4 +5,5 @@ pub mod spawn;
 pub mod world;
 pub mod params;
 
+mod spatial_grid;
 mod steering;

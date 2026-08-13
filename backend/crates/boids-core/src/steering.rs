@@ -2,7 +2,7 @@ use crate::boid::Boid;
 use crate::math::Vec3;
 use crate::params::SimulationParams;
 
-pub(crate) fn acceleration_for(index: usize, boids: &[Boid], params: &SimulationParams) -> Vec3 {
+pub(crate) fn acceleration_for(index: usize, boids: &[Boid], candidates: &[usize], params: &SimulationParams) -> Vec3 {
     let mut alignment = Vec3::ZERO;
     let mut cohesion = Vec3::ZERO;
 
@@ -16,10 +16,11 @@ pub(crate) fn acceleration_for(index: usize, boids: &[Boid], params: &Simulation
     let mut cohesion_center = Vec3::new(0.0, 0.0, 0.0); 
     let mut separation_vec = Vec3::new(0.0, 0.0, 0.0);
 
-    for (other_index, other_boid) in boids.iter().enumerate() {
+    for &other_index in candidates {
         if other_index == index {
             continue;
         }
+        let other_boid = &boids[other_index];
 
         let distance_sq = current_boid.position.distance_squared(other_boid.position);
 
