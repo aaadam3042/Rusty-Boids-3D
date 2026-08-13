@@ -17,7 +17,7 @@ public class BoidsClientBehaviour : MonoBehaviour
     private readonly Dictionary<int, GameObject> boidsById = new();
 
     private Process hostProcess;
-    private GameObject boidsEmpty;
+    private Transform boidsRoot;
     private double latestSnapshotAcceptedAt = -1.0;
     private long rxDiscardedSinceLastLog;
     private int fpsFrameCount;
@@ -48,7 +48,8 @@ public class BoidsClientBehaviour : MonoBehaviour
         fpsWindowStartedAt = now;
         nextHealthLogAt = now + 1.0;
 
-        boidsEmpty = new GameObject("Boids");
+        boidsRoot = new GameObject("Boids").transform;
+        boidsRoot.SetParent(transform, false);
         StartHost();
     }
 
@@ -272,14 +273,13 @@ public class BoidsClientBehaviour : MonoBehaviour
             return boid;
 
         boid = CreateBoid(boidId);
-        boid.transform.SetParent(boidsEmpty.transform);
         boidsById.Add(boidId, boid);
         return boid;
     }
 
     private GameObject CreateBoid(int boid_id)
     {
-        GameObject boid = Instantiate(boidPrefab);
+        GameObject boid = Instantiate(boidPrefab, boidsRoot, false);
         boid.name = $"Boid {boid_id}";
         return boid;
     }
