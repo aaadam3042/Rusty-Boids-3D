@@ -463,7 +463,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceb8e9f6323904274ab0d366c14ef9c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoidsClientBehaviour
-  executablePath: /Users/aaadam3042/Files/Projects/Rusty-Boids-3D/backend/target/debug/boids-host
+  executablePath: /Users/aaadam3042/Files/Projects/Rusty-Boids-3D/backend/target/release/boids-host
   performanceDisplay: {fileID: 1517352089}
   boidPrefab: {fileID: 7513091061953657326, guid: 8b828851638e0464e8d12d12c803320f, type: 3}
 --- !u!4 &194579649
