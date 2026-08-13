@@ -13,14 +13,43 @@ public class BoidsClientBehaviour : MonoBehaviour
     private readonly ConcurrentQueue<string> snapshots = new();
     private readonly ConcurrentQueue<string> diagnostics = new();
     private readonly Dictionary<int, GameObject> boidsById = new();
-    private long lastRenderedTick = -1;
 
     private Process hostProcess;
     private GameObject boidsEmpty;
 
+    public HostHealthSnapshot LatestHostHealth { get; private set; }
+    public long LatestTick { get; private set; } = -1;
+    public int DiscardedSnapshotsLastFrame { get; private set; }
+    public long TotalDiscardedSnapshots { get; private set; }
+
+    public double SecondsSinceLatestSnapshot
+    {
+        get
+        {
+            if (latestSnapshotAcceptedAt < 0.0)
+                return double.PositiveInfinity;
+
+            return Time.realtimeSinceStartupAsDouble -
+                latestSnapshotAcceptedAt;
+        }
+    }
+
+    private double latestSnapshotAcceptedAt = -1.0;
+    private long rxDiscardedSinceLastLog;
+
+    private int fpsFrameCount;
+    private double fpsWindowStartedAt;
+    private double unityFps;
+
+    private double nextHealthLogAt;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        double now = Time.realtimeSinceStartupAsDouble;
+        fpsWindowStartedAt = now;
+        nextHealthLogAt = now + 1.0;
+
         boidsEmpty = new GameObject("Boids");
         StartHost();
     }
@@ -122,11 +151,31 @@ public class BoidsClientBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        double now = Time.realtimeSinceStartupAsDouble;
+
+        fpsFrameCount++;
+
+        double fpsElapsed = now - fpsWindowStartedAt;
+
+        if (fpsElapsed >= 1.0)
+        {
+            unityFps = fpsFrameCount / fpsElapsed;
+            fpsFrameCount = 0;
+            fpsWindowStartedAt = now;
+        }
+
         string newestJson = null;
+        int dequeuedSnapshots = 0;
+
         while (snapshots.TryDequeue(out string json))
         {
             newestJson = json;   
+            dequeuedSnapshots++;
         }
+
+        DiscardedSnapshotsLastFrame = dequeuedSnapshots > 0 ? dequeuedSnapshots - 1 : 0;
+        TotalDiscardedSnapshots += DiscardedSnapshotsLastFrame;
+
         if (newestJson != null)
         {
             try
@@ -138,13 +187,28 @@ public class BoidsClientBehaviour : MonoBehaviour
                 } 
                 else
                 {
-                    if (lastRenderedTick >= 0 && snapshot.tick > lastRenderedTick + 1)
-                    {
-                        Debug.Log($"Skipped {snapshot.tick - lastRenderedTick - 1} snapshots");
-                    }
+                    LatestTick = snapshot.tick;
+                    LatestHostHealth = snapshot.health;
+                    latestSnapshotAcceptedAt = Time.realtimeSinceStartupAsDouble;
 
-                    lastRenderedTick = snapshot.tick;
                     ApplySnapshot(snapshot);   
+                }
+                
+                if (now >= nextHealthLogAt && LatestHostHealth != null)
+                {
+                    Debug.Log(
+                        $"SIM {LatestHostHealth.realTimeFactor:F2}x | " +
+                        $"tick {LatestTick} | " +
+                        $"late {LatestHostHealth.deadlineLatenessMs:F2} ms | " +
+                        $"step {LatestHostHealth.lastStepMs:F2} ms | " +
+                        $"publish {LatestHostHealth.previousPublishMs:F2} ms | " +
+                        $"RX discarded {rxDiscardedSinceLastLog} " +
+                        $"({TotalDiscardedSnapshots} total) | " +
+                        $"Unity {unityFps:F1} FPS"
+                    );
+
+                    rxDiscardedSinceLastLog = 0;
+                    nextHealthLogAt = now + 1.0;
                 }
             } 
             catch (Exception e)
