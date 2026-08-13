@@ -398,6 +398,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoidsClientBehaviour
   executablePath: /Users/aaadam3042/Files/Projects/Rusty-Boids-3D/backend/target/debug/boids-host
+  performanceDisplay: {fileID: 1517352089}
 --- !u!4 &194579649
 Transform:
   m_ObjectHideFlags: 0
@@ -2484,6 +2485,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1517352088}
+  - component: {fileID: 1517352089}
   m_Layer: 5
   m_Name: PerformancePanel
   m_TagString: Untagged
@@ -2500,7 +2502,7 @@ RectTransform:
   m_GameObject: {fileID: 1517352087}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1074277790}
@@ -2513,9 +2515,30 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 300, y: -200}
+  m_AnchoredPosition: {x: 150, y: -100}
   m_SizeDelta: {x: 500, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1517352089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517352087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 684d6aa2db93e456bb233ff6f68f7152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PerformanceDisplay
+  simSpeedValue: {fileID: 1850986687}
+  hostLateValue: {fileID: 349781149}
+  stepValue: {fileID: 541302174}
+  publishValue: {fileID: 345270184}
+  discardedValue: {fileID: 509957367}
+  fpsValue: {fileID: 117687025}
+  normalColour: {r: 1, g: 1, b: 1, a: 1}
+  warningColour: {r: 1, g: 0.64705884, b: 0, a: 1}
+  criticalColour: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1850986685
 GameObject:
   m_ObjectHideFlags: 0
@@ -2796,9 +2819,9 @@ SceneRoots:
   m_Roots:
   - {fileID: 330585546}
   - {fileID: 410087041}
+  - {fileID: 1485599758}
   - {fileID: 832575519}
-  - {fileID: 194579649}
   - {fileID: 38355568}
   - {fileID: 1292283282}
+  - {fileID: 194579649}
   - {fileID: 424832269}
-  - {fileID: 1485599758}

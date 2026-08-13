@@ -9,6 +9,7 @@ using Debug = UnityEngine.Debug;
 public class BoidsClientBehaviour : MonoBehaviour
 {
     [SerializeField] private string executablePath;
+    [SerializeField] private PerformanceDisplay performanceDisplay;
     
     private readonly ConcurrentQueue<string> snapshots = new();
     private readonly ConcurrentQueue<string> diagnostics = new();
@@ -196,16 +197,17 @@ public class BoidsClientBehaviour : MonoBehaviour
                 
                 if (now >= nextHealthLogAt && LatestHostHealth != null)
                 {
-                    Debug.Log(
-                        $"SIM {LatestHostHealth.realTimeFactor:F2}x | " +
-                        $"tick {LatestTick} | " +
-                        $"late {LatestHostHealth.deadlineLatenessMs:F2} ms | " +
-                        $"step {LatestHostHealth.lastStepMs:F2} ms | " +
-                        $"publish {LatestHostHealth.previousPublishMs:F2} ms | " +
-                        $"RX discarded {rxDiscardedSinceLastLog} " +
-                        $"({TotalDiscardedSnapshots} total) | " +
-                        $"Unity {unityFps:F1} FPS"
-                    );
+                    // Debug.Log(
+                    //     $"SIM {LatestHostHealth.realTimeFactor:F2}x | " +
+                    //     $"tick {LatestTick} | " +
+                    //     $"late {LatestHostHealth.deadlineLatenessMs:F2} ms | " +
+                    //     $"step {LatestHostHealth.lastStepMs:F2} ms | " +
+                    //     $"publish {LatestHostHealth.previousPublishMs:F2} ms | " +
+                    //     $"RX discarded {rxDiscardedSinceLastLog} " +
+                    //     $"({TotalDiscardedSnapshots} total) | " +
+                    //     $"Unity {unityFps:F1} FPS"
+                    // );
+                    performanceDisplay.Render(LatestHostHealth, rxDiscardedSinceLastLog, TotalDiscardedSnapshots, unityFps);
 
                     rxDiscardedSinceLastLog = 0;
                     nextHealthLogAt = now + 1.0;
