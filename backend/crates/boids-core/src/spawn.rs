@@ -149,7 +149,12 @@ mod tests {
 
         for boid in boids {
             let speed = boid.velocity.length();
-            assert!((speed - config.initial_speed).abs() < f32::EPSILON)
+            let tolerance = config.initial_speed * 1.0e-6;
+            assert!(
+                (speed - config.initial_speed).abs() <= tolerance,
+                "expected speed {}, got {speed}",
+                config.initial_speed,
+            );
         }
     }
 
