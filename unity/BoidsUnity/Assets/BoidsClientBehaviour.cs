@@ -10,6 +10,7 @@ public class BoidsClientBehaviour : MonoBehaviour
 {
     [SerializeField] private string executablePath;
     [SerializeField] private PerformanceDisplay performanceDisplay;
+    [SerializeField] private GameObject boidPrefab;
 
     private readonly ConcurrentQueue<string> snapshots = new();
     private readonly ConcurrentQueue<string> diagnostics = new();
@@ -278,7 +279,7 @@ public class BoidsClientBehaviour : MonoBehaviour
 
     private GameObject CreateBoid(int boid_id)
     {
-        GameObject boid = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        GameObject boid = Instantiate(boidPrefab);
         boid.name = $"Boid {boid_id}";
         return boid;
     }
