@@ -30,6 +30,18 @@ public class BoidsClientBehaviour : MonoBehaviour
     public int DiscardedSnapshotsLastFrame { get; private set; }
     public long TotalDiscardedSnapshots { get; private set; }
 
+    public bool TryGetBoidTransform(int boidId, out Transform boidTransform)
+    {
+        if (boidsById.TryGetValue(boidId, out GameObject boid))
+        {
+            boidTransform = boid.transform;
+            return true;
+        }
+
+        boidTransform = null;
+        return false;
+    }
+
     public double SecondsSinceLatestSnapshot
     {
         get
