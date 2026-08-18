@@ -25,8 +25,8 @@ impl Default for SimulationParams {
             perception_radius: 15.0,
             separation_radius: 2.0,
 
-            cohesion_weight: 18.0,
-            alignment_weight: 3.0,
+            cohesion_weight: 3.0,
+            alignment_weight: 1.0,
             separation_weight: 180.0,
 
             max_speed: 200.0,

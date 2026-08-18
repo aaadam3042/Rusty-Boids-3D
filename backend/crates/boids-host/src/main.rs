@@ -154,7 +154,7 @@ fn main() -> io::Result<()> {
         // boundary_mode: BoundaryMode::SoftTurn { margin: 10.0, turn_acceleration: 500.0 },
     };
 
-    let spawn_config = SpawnConfig::new(1000, 123, 100.0);
+    let spawn_config = SpawnConfig::new(2000, 123, 100.0);
     let mut world = World::from_config(spawn_config, world_settings);
 
     let stdout = io::stdout();
