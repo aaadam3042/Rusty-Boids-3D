@@ -41,11 +41,11 @@ impl Bounds {
 
 // Getters
 impl Bounds {
-    pub const fn min(&self) -> Vec3 {
+    pub(crate) const fn min(&self) -> Vec3 {
         self.min
     }
 
-    pub const fn max(&self) -> Vec3 {
+    pub(crate) const fn max(&self) -> Vec3 {
         self.max
     }
 }
