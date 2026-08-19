@@ -4,6 +4,7 @@ using UnityEngine;
 [Serializable]
 public sealed class WorldSnapshot
 {
+    public string type;
     public long tick;
     public BoidSnapshot[] boids;
     public HostHealthSnapshot health;

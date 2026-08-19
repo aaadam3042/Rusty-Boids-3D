@@ -64,9 +64,8 @@ impl SpatialGrid {
 
     /// Collects possible neighbours from every cell touched by `search_radius`.
     ///
-    /// Results are sorted by boid index so steering accumulation follows the
-    /// same deterministic order as a full traversal. The querying boid may be
-    /// present and should be skipped by the caller.
+    /// Results follow deterministic cell traversal and bucket order. The
+    /// querying boid may be present and should be skipped by the caller.
     pub(crate) fn collect_candidates(
         &self,
         position: Vec3,
@@ -215,7 +214,7 @@ mod tests {
     }
 
     #[test]
-    fn test_collect_candidates_searches_surrounding_cells_in_index_order() {
+    fn test_collect_candidates_searches_surrounding_cells_in_cell_order() {
         let bounds = bounds(Vec3::ZERO, Vec3::new(40.0, 40.0, 40.0));
         let mut grid = SpatialGrid::new(&bounds, 10.0, 4);
         let boids = vec![
@@ -229,7 +228,7 @@ mod tests {
         let mut candidates = vec![usize::MAX];
         grid.collect_candidates(boids[0].position, 10.0, &mut candidates);
 
-        assert_eq!(candidates, vec![0, 1, 3]);
+        assert_eq!(candidates, vec![3, 0, 1]);
     }
 
     #[test]

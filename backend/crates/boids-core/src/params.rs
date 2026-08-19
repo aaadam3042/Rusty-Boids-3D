@@ -61,6 +61,20 @@ impl SimulationParams {
         params.validate()?;
         Ok(params)
     }
+
+    pub fn try_with_weights(
+        mut self,
+        cohesion_weight: f32,
+        alignment_weight: f32,
+        separation_weight: f32,
+    ) -> Result<Self, ParamsError> {
+        self.cohesion_weight = cohesion_weight;
+        self.alignment_weight = alignment_weight;
+        self.separation_weight = separation_weight;
+
+        self.validate()?;
+        Ok(self)
+    }
 }
 
 // Getters
@@ -151,6 +165,8 @@ impl SimulationParams {
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::field_reassign_with_default)]
+
     use super::*;
 
     fn construct(params: SimulationParams) -> Result<SimulationParams, ParamsError> {
@@ -185,6 +201,42 @@ mod tests {
     fn test_valid_zero_weights() {
         let params = SimulationParams::try_new(20.0, 5.0, 0.0, 0.0, 0.0, 10.0, 5.0);
         assert!(params.is_ok());
+    }
+
+    #[test]
+    fn test_try_with_weights_replaces_only_weights() {
+        let original = SimulationParams::try_new(20.0, 5.0, 1.0, 2.0, 3.0, 10.0, 5.0)
+            .expect("expected valid original parameters");
+
+        let updated = original
+            .try_with_weights(4.0, 5.0, 6.0)
+            .expect("expected valid replacement weights");
+
+        assert_eq!(updated.perception_radius(), original.perception_radius());
+        assert_eq!(updated.separation_radius(), original.separation_radius());
+        assert_eq!(updated.max_speed(), original.max_speed());
+        assert_eq!(updated.max_acceleration(), original.max_acceleration());
+        assert_eq!(updated.cohesion_weight(), 4.0);
+        assert_eq!(updated.alignment_weight(), 5.0);
+        assert_eq!(updated.separation_weight(), 6.0);
+    }
+
+    #[test]
+    fn test_try_with_weights_rejects_invalid_replacement() {
+        let original = SimulationParams::default();
+
+        assert_eq!(
+            original.try_with_weights(-1.0, 1.0, 1.0),
+            Err(ParamsError::MustBeNonNegative("cohesion_weight"))
+        );
+        assert_eq!(
+            original.try_with_weights(1.0, f32::NAN, 1.0),
+            Err(ParamsError::NonFinite("alignment_weight"))
+        );
+        assert_eq!(
+            original.try_with_weights(1.0, 1.0, f32::INFINITY),
+            Err(ParamsError::NonFinite("separation_weight"))
+        );
     }
 
     #[test]
